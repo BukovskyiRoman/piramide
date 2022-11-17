@@ -1,0 +1,40 @@
+{
+    "name": "finalytask",
+    "version": "1.0.0",
+    "description": "Finally task",
+    "scripts": {
+        "start": "nodemon -r dotenv/config index.mjs",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Roman Bukovskyi",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^1.1.3",
+        "bcrypt": "^5.1.0",
+        "connect-redis": "^6.1.3",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "express-session": "^1.17.3",
+        "express-validator": "^6.14.2",
+        "ioredis": "^5.2.4",
+        "morgan": "^1.10.0",
+        "node-cron": "^3.0.2",
+        "nodemailer": "^6.8.0",
+        "passport": "^0.6.0",
+        "passport-local": "^1.0.0",
+        "passport-session": "^1.0.2",
+        "process": "^0.11.10",
+        "redis": "^4.4.0",
+        "reflect-metadata": "^0.1.13",
+        "rimraf": "^3.0.2",
+        "rxjs": "^7.2.0",
+        "sequelize": "^6.25.5",
+        "sqlite": "^4.1.2",
+        "sqlite3": "^5.1.2",
+        "winston": "^3.8.2"
+    },
+    "devDependencies": {
+        "sequelize-cli": "^6.5.2"
+    }
+}
