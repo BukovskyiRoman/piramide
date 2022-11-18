@@ -83,7 +83,7 @@ export const getUserByEmail = async (email) => {
  */
 export const addTransaction = async (sum, userId, invest) => {
     const user = await getUserById(userId);
-    const newBalance = parseInt(user.balance) + parseInt(sum);
+    const newBalance = parseFloat(user.balance) + parseFloat(sum);
     try {
         await db.sequelize.transaction(async action => {
             await db.Transaction.create({
