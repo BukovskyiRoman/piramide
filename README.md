@@ -8,3 +8,6 @@
  admin credential from seeder: 
 - admin@email.com
 - password: 12345678
+
+# Postman collection:
+WWW.postman_collection.json
