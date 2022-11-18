@@ -7,6 +7,9 @@ import {body, validationResult} from 'express-validator';
 
 export const investorRouter = Router();
 
+/**
+ * Method which will redirect to admin routs
+ */
 investorRouter.all('*', async (req, res, next) => {
     if (req.isAuthenticated() && req.user.RoleId === 1) {
         return res.redirect('/admin')
@@ -15,6 +18,9 @@ investorRouter.all('*', async (req, res, next) => {
     }
 })
 
+/**
+ * Endpoint for money investment
+ */
 investorRouter.put('/put',
     body('money').notEmpty().isInt({min: 1}),
     async (req, res, next) => {
@@ -34,6 +40,9 @@ investorRouter.put('/put',
         }
     });
 
+/**
+ * Endpoint for getting money from balance
+ */
 investorRouter.put('/get',
     body('money').notEmpty().isInt({min: 1}),
     async (req, res, next) => {
@@ -53,6 +62,9 @@ investorRouter.put('/get',
         }
     });
 
+/**
+ * Endpoint for getting investor profile data
+ */
 investorRouter.get('/me', async (req, res, next) => {
     if (req.isAuthenticated()) {
         res.json(req.user)
@@ -61,11 +73,14 @@ investorRouter.get('/me', async (req, res, next) => {
     }
 });
 
+/**
+ * Endpoint for creating invites
+ */
 investorRouter.post('/invite',
     body('email').isEmail().notEmpty().custom(async (email, { req }) => {
         const user = await getUserByEmail(email);
         if (user) {
-            console.log(user)
+            //registered user can't be invited
             return false;
         }
         return true;

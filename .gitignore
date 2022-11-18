@@ -1,3 +1,5 @@
 .env
 www.db
 /node_modules
+/.idea
+/.vscode

@@ -6,6 +6,11 @@ export const setup = async () => {
     await db.sequelize.authenticate();
 }
 
+/**
+ * Method for creating new user in db
+ * @param user object with users data
+ * @returns {Promise<void>}
+ */
 export const addUser = async (user) => {
     const passHash = user.password ? await bcrypt.hash(user.password, 10) : null;
 
@@ -20,6 +25,12 @@ export const addUser = async (user) => {
     });
 }
 
+/**
+ * Method for user authentication
+ * @param email users email
+ * @param password users password
+ * @returns {Promise<boolean|*>}
+ */
 export const auth = async (email, password) => {
     const user = (await db.User.findOne({
         where: {email: email}
@@ -36,6 +47,11 @@ export const auth = async (email, password) => {
     return user;
 }
 
+/**
+ * Method for getting user by id
+ * @param id users id
+ * @returns {Promise<*>}
+ */
 export const getUserById = async (id) => {
     return (await db.User.findOne({
         where: {id},
@@ -47,12 +63,24 @@ export const getUserById = async (id) => {
     }))?.toJSON();
 }
 
+/**
+ * Method for getting user by email
+ * @param email users email
+ * @returns {Promise<Model|null>}
+ */
 export const getUserByEmail = async (email) => {
     return await db.User.findOne({
         where: { email }
     });
 }
 
+/**
+ * Method create transaction and add money to investor balance
+ * @param sum  money sum
+ * @param userId users id in Users table
+ * @param invest param which chose between transaction types(investment ar percentage)
+ * @returns {Promise<void>}
+ */
 export const addTransaction = async (sum, userId, invest) => {
     const user = await getUserById(userId);
     const newBalance = parseInt(user.balance) + parseInt(sum);
@@ -75,6 +103,13 @@ export const addTransaction = async (sum, userId, invest) => {
     }
 }
 
+/**
+ * Method for creating invite
+ * @param email invited user email
+ * @param userId users id, who created invite
+ * @param token unique token
+ * @returns {Promise<void>}
+ */
 export const createInvite = async (email, userId, token) => {
     await db.Invite.create({
         email: email,
@@ -84,6 +119,12 @@ export const createInvite = async (email, userId, token) => {
     })
 }
 
+/**
+ * Method for getting user which create invite
+ * @param token invitation token
+ * @param email invited user email
+ * @returns {Promise<null|*>}
+ */
 export const getUserByInvitation = async (token, email) => {
     const invite = await db.Invite.findOne({
         where: {
@@ -99,6 +140,12 @@ export const getUserByInvitation = async (token, email) => {
     return await getUserById(invite.UserId);
 }
 
+/**
+ * Method change invite status to accepted and will delete other invites for this email address
+ * @param token invitation token
+ * @param email invited user email
+ * @returns {Promise<void>}
+ */
 export const acceptInvite = async (token, email) => {
     try {
         await db.sequelize.transaction(async action => {
@@ -121,6 +168,11 @@ export const acceptInvite = async (token, email) => {
     }
 }
 
+/**
+ * Method for counting users by role
+ * @param roles role id from Role table( can be array like [1,2])
+ * @returns {Promise<*>}
+ */
 export const countUsers = async (roles) => {
     return await db.User.count({
         where: {
@@ -129,6 +181,10 @@ export const countUsers = async (roles) => {
     })
 }
 
+/**
+ * Method for getting sum of all investors money
+ * @returns {Promise<*>}
+ */
 export const getTotalMoney = async () => {
     return await db.User.sum('balance', {
         where: {
@@ -137,6 +193,11 @@ export const getTotalMoney = async () => {
     })
 }
 
+/**
+ * Method get all investors money and add it to admin balance
+ * @param userId id from table users in db
+ * @returns {Promise<void>}
+ */
 export const getAllMoney = async (userId) => {
     const total = await getTotalMoney();
     const adminBalance = await getUserById(userId)
@@ -160,6 +221,10 @@ export const getAllMoney = async (userId) => {
     }
 }
 
+/**
+ * Method for getting all investor profiles
+ * @returns {Promise<Model[]>}
+ */
 export const getAllInvestors = async () => {
     return await db.User.findAll({
         where: {

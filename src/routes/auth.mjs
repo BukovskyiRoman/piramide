@@ -5,6 +5,9 @@ import {body, query, validationResult} from 'express-validator';
 
 export const authRouter = Router();
 
+/**
+ * Method for creating new users
+ */
 authRouter.post('/signup',
     body('email').isEmail(),
     body('password').isLength({ min: 8 }),
@@ -16,6 +19,7 @@ authRouter.post('/signup',
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+
         const token = req.query.token;
         let inviterId = null;
         const {first_name, last_name, email, password} = req.body;
@@ -39,6 +43,9 @@ authRouter.post('/signup',
         res.sendStatus(204);
     });
 
+/**
+ * Method for authenticate user
+ */
 authRouter.post('/login',
     body('email').isEmail(),
     body('password').isLength({ min: 8 }),

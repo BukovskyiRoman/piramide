@@ -14,20 +14,23 @@ import {isAdmin} from "./middlewares/adminChecker.mjs";
 import {setup} from "../dataservice.mjs";
 import cron from 'node-cron'
 import {bonusProcessor} from "./scheduler/bonusProcessor.mjs";
-import nodemailer from 'nodemailer';
-import {inviteLetter} from "./emails/invite.mjs";
-import {emailProvider} from "./providers/nodemailer.mjs";
 import {errorHandler} from "./errorHandler.mjs";
 
 const RedisStore = ConnectRedis(session);
 const sessionRedisClient = new Redis();
 
+/**
+ *
+ * @param port
+ * @returns {Promise<http.Server<typeof IncomingMessage, typeof ServerResponse>>}
+ */
 export const createServer = async (port) => {
     const app = express();
 
     await setup();
 
-    cron.schedule('* * * * *', async () => {        //todo once per day needed
+    // increasing invest once a day
+    cron.schedule('0 10 * * *', async () => {
         await bonusProcessor();
     });
 
