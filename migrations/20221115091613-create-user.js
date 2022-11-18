@@ -27,7 +27,7 @@ module.exports = {
             },
             balance: {
                 type: Sequelize.DOUBLE,
-                default: 0
+                defaultValue: 0.0
             },
             RoleId: {
                 type: Sequelize.INTEGER,

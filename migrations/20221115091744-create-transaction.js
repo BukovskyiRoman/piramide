@@ -23,7 +23,7 @@ module.exports = {
             },
             invest: {
                 type: Sequelize.BOOLEAN,
-                default: 0,
+                defaultValue: 0,
                 allowNull: false
             },
             createdAt: {

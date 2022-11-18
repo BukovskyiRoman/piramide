@@ -19,7 +19,7 @@ module.exports = {
             },
             accepted: {
                 type: Sequelize.BOOLEAN,
-                default: 0,
+                defaultValue: 0,
                 allowNull: false
             },
             UserId: {

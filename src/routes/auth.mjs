@@ -13,7 +13,7 @@ authRouter.post('/signup',
     body('password').isLength({ min: 8 }),
     body('first_name').isLength({ min: 2 }),
     body('last_name').isLength({ min: 2 }),
-    query('token').isUUID(),
+    query('token').isUUID().optional(),
     async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
