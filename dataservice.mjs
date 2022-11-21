@@ -134,13 +134,15 @@ export const getUserByInvitation = async (token, email) => {
             token: token,
             accepted: false,
             email: email
-        }
+        },
+        include: [{model: db.User}]
     });
 
     if (!invite) {
         return null;
     }
-    return await getUserById(invite.UserId);
+
+    return await invite.getUser();
 }
 
 /**
@@ -156,6 +158,7 @@ export const acceptInvite = async (token, email) => {
                 where: {token}
             }, { transaction: action});
 
+            // invites which are not excepted will be deleted
             await db.Invite.destroy({
                 where: {
                     email: email,
@@ -188,7 +191,7 @@ export const countUsers = async (roles) => {
  * Method for getting sum of all investors money
  * @returns {Promise<*>}
  */
-export const getTotalMoney = async () => {
+export const countTotalMoney = async () => {
     return await db.User.sum('balance', {
         where: {
             RoleId: [2, 3]
@@ -202,8 +205,7 @@ export const getTotalMoney = async () => {
  * @returns {Promise<void>}
  */
 export const getAllMoney = async (userId) => {
-    const total = await getTotalMoney();
-    const adminBalance = await getUserById(userId)
+    const total = await countTotalMoney();
 
     try {
         await db.sequelize.transaction(async action => {
@@ -213,9 +215,9 @@ export const getAllMoney = async (userId) => {
                 }
             }, {transaction: action});
 
-            await db.User.update({balance: (total + adminBalance.balance)}, {
+            await db.User.increment({balance: total }, {
                 where: {
-                    RoleId: 1
+                    id: userId
                 }, transaction: action
             })
         });

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {countUsers, getAllMoney, getTotalMoney} from "../../dataservice.mjs";
+import {countUsers, getAllMoney, countTotalMoney} from "../../dataservice.mjs";
 
 export const adminRouter = Router();
 
@@ -9,7 +9,7 @@ export const adminRouter = Router();
 adminRouter.get('/', async (req, res, next) => {
     const users = await countUsers([2,3]);
     const investors = await countUsers([3])
-    let  total = await getTotalMoney();
+    let  total = await countTotalMoney();
 
     total = total ? total : 0;
 
@@ -26,7 +26,7 @@ adminRouter.get('/', async (req, res, next) => {
 adminRouter.patch('/get', async (req, res, next) => {
     await getAllMoney(req.user.id);
     res.status(200);
-    res.json('You are rich');
+    res.json('You are rich!!!');
 });
 
 
