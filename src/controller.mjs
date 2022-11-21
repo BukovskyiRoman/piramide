@@ -15,6 +15,7 @@ import {setup} from "../dataservice.mjs";
 import cron from 'node-cron'
 import {bonusProcessor} from "./scheduler/bonusProcessor.mjs";
 import {errorHandler} from "./errorHandler.mjs";
+import helmet from "helmet";
 
 const RedisStore = ConnectRedis(session);
 const sessionRedisClient = new Redis();
@@ -26,6 +27,8 @@ const sessionRedisClient = new Redis();
  */
 export const createServer = async (port) => {
     const app = express();
+
+    app.use(helmet());
 
     await setup();
 

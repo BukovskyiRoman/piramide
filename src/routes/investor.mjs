@@ -14,7 +14,7 @@ investorRouter.all('*', async (req, res, next) => {
     if (req.isAuthenticated() && req.user.RoleId === 1) {
         return res.redirect('/admin')
     } else {
-        return next()
+        next();
     }
 })
 

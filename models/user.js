@@ -12,7 +12,12 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             User.belongsTo(models.Role)
-            User.hasMany(models.Transaction);
+            User.hasMany(models.Transaction)
+            User.hasMany(models.Invite)
+            User.belongsTo(models.User, {
+                as: 'inviter',
+                foreignKey: 'InviterId'
+            })
         }
     }
 

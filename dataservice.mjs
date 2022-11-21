@@ -57,7 +57,9 @@ export const getUserById = async (id) => {
         where: {id},
         include: [
             {model: db.Role},
-            {model: db.Transaction}
+            {model: db.Transaction},
+            'inviter',
+            {model: db.Invite}
         ]
 
     }))?.toJSON();

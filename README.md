@@ -1,8 +1,8 @@
 - install all npm dependencies
 - rename www.db.example to www.db
 - .env data needed( rename .env.example to .env and add values)
-- run migration
-- run seeder
+- run migration ( sequelize db:migrate )
+- run seeder(  sequelize db:seed:all )
 
 # Credentials:
  admin credential from seeder: 
