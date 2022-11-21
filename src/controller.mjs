@@ -33,7 +33,7 @@ export const createServer = async (port) => {
     await setup();
 
     // increasing invest once a day
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('0 8 * * *', async () => {
         await bonusProcessor();
     });
 

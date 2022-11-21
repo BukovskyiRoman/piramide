@@ -59,6 +59,7 @@ export const getUserById = async (id) => {
             {model: db.Role},
             {model: db.Transaction},
             'inviter',
+            'invited_users',
             {model: db.Invite}
         ]
 
