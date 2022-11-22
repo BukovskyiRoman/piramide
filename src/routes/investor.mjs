@@ -4,6 +4,9 @@ import {randomUUID} from "crypto";
 import {emailProvider} from "../providers/nodemailer.mjs";
 import {inviteLetter} from "../emails/invite.mjs";
 import {body, validationResult} from 'express-validator';
+import Bull from "bull";
+import milliseconds from "milliseconds";
+import {queueConfig} from "../../config/queue.mjs";
 
 export const investorRouter = Router();
 
@@ -90,13 +93,30 @@ investorRouter.post('/invite',
         if (!errors.isEmpty()) {
             return res.status(400).json({errors: errors.array()});
         }
+
         const email = req.body.email;
         const user = await getUserById(req.user.id);
         const token = randomUUID();
         await createInvite(email, user.id, token);
 
         const mailData = await inviteLetter(token, email);
-        emailProvider.sendMail(mailData);
+
+        const queue = new Bull('email', await queueConfig());
+
+        const main = async () => {
+            await queue.add( mailData );
+        };
+
+        queue.process((job, done) => {
+            emailProvider.sendMail(job.data);
+            done();
+        });
+
+        queue.on('completed', job => {
+            console.log(`Email was sent, job id= ${job.id}`)
+        })
+
+        main().catch(console.error);
 
         res.sendStatus(200);
     })

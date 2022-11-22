@@ -7,16 +7,10 @@ export const adminRouter = Router();
  * Method for displaying startup statistic
  */
 adminRouter.get('/', async (req, res, next) => {
-    const users = await countUsers([2,3]);
-    const investors = await countUsers([3])
-    let  total = await countTotalMoney();
-
-    total = total ? total : 0;
-
     res.json({
-        'allUsers': users,
-        'investors': investors,
-        'balance': total
+        'allUsers': await countUsers(['investor', 'user']),
+        'investors': await countUsers(['investor']),
+        'balance': await countTotalMoney()
     })
 });
 

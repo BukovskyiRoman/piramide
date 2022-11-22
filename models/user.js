@@ -35,8 +35,19 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         email: DataTypes.STRING,
-        password: DataTypes.STRING,
-        balance: DataTypes.DOUBLE,
+        password: {
+            type: DataTypes.STRING,
+            set(value) {
+                this.setDataValue('password', bcrypt.hashSync(value, 10))
+            }
+        },
+        balance: {
+            type: DataTypes.DOUBLE,
+            get() {
+                const rawValue = this.getDataValue('balance');
+                return rawValue ? rawValue.toFixed(2) : 0;
+            }
+        },
         RoleId: DataTypes.INTEGER,
         InviterId: DataTypes.INTEGER
     }, {

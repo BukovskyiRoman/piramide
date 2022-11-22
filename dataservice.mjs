@@ -12,13 +12,11 @@ export const setup = async () => {
  * @returns {Promise<void>}
  */
 export const addUser = async (user) => {
-    const passHash = user.password ? await bcrypt.hash(user.password, 10) : null;
-
     await db.User.create({
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
-        password: passHash,
+        password: user.password,
         balance: 0,
         RoleId: 2,
         InviterId: user.inviterId
@@ -117,8 +115,7 @@ export const createInvite = async (email, userId, token) => {
     await db.Invite.create({
         email: email,
         token: token,
-        UserId: userId,
-        accepted: false
+        UserId: userId
     })
 }
 
@@ -181,9 +178,14 @@ export const acceptInvite = async (token, email) => {
  */
 export const countUsers = async (roles) => {
     return await db.User.count({
-        where: {
-            RoleId: roles
-        }
+        include: [
+            {
+                model: db.Role,
+                where: {
+                    role: roles
+                }
+            }
+        ]
     })
 }
 
@@ -192,11 +194,13 @@ export const countUsers = async (roles) => {
  * @returns {Promise<*>}
  */
 export const countTotalMoney = async () => {
-    return await db.User.sum('balance', {
+    const balance = await db.User.sum('balance', {
         where: {
             RoleId: [2, 3]
         }
-    })
+    });
+
+    return balance ? balance : 0;
 }
 
 /**
