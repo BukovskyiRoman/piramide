@@ -52,13 +52,20 @@ export const auth = async (email, password) => {
  */
 export const getUserById = async (id) => {
     return (await db.User.findOne({
+        attributes: [
+            'first_name',
+            'last_name',
+            'full_name',
+            'balance'
+        ],
         where: {id},
         include: [
-            {model: db.Role},
-            {model: db.Transaction},
+            {model: db.Role, attributes: ['role']},
+            {association: 'investment', attributes: ['sum', 'createdAt'], where: {invest: true}},
+            {association: 'percentages', attributes: ['sum', 'createdAt'], where: {invest: false}},
             'inviter',
             'invited_users',
-            {model: db.Invite}
+            {model: db.Invite, attributes: ['email', 'accepted', 'createdAt']}
         ]
 
     }))?.toJSON();
