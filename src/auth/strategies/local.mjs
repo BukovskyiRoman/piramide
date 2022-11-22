@@ -7,6 +7,7 @@ export const localStrategy = new PassportLocal({
     //passReqToCallback : true
 }, async (email, password, next) => {
     const user = await auth(email, password);
+
     if (user) {
         return next(null, user);
     }

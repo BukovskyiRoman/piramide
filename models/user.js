@@ -13,11 +13,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             User.belongsTo(models.Role)
             User.hasMany(models.Transaction, {
-                as: 'investment'
-            })
-            User.hasMany(models.Transaction, {
-                as: 'percentages'
-            })
+                    as: 'investment'
+                })
             User.hasMany(models.Invite)
             User.belongsTo(models.User, {
                 as: 'inviter',
